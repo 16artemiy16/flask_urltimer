@@ -1,8 +1,8 @@
 import logging
 from datetime import datetime
-from timeit import default_timer as timer
-from flask import g, request
+from flask import request
 
+from .helpers import add_timemark, map_timemarks, get_timemarks
 from .exporters import TxtExporter
 
 log = logging.getLogger('flask_urltimer')
@@ -19,19 +19,18 @@ class FlaskUrltimer(object):
 
         @app.before_request
         def do_before():
-            g.__flask_urltimer_timer_start = timer()
+            add_timemark('start')
 
         @app.after_request
         def do_after(res):
-            time = timer() - g.__flask_urltimer_timer_start
+            add_timemark('end')
+
             data = dict(
                 timestamp=datetime.timestamp(datetime.now()),
                 req=dict(
                     url=request.url
                 ),
-                points=dict(
-                    end=time
-                )
+                timemarks=map_timemarks(get_timemarks())
             )
             TxtExporter(self.app, data).export()
             return res

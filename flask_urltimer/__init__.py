@@ -1,3 +1,3 @@
-from .extension import FlaskUrltimer, log
+from .extension import FlaskUrltimer, log, add_timemark
 
-__all__ = ['FlaskUrltimer', 'log']
+__all__ = ['FlaskUrltimer', 'log', 'add_timemark']
