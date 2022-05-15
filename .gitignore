@@ -24,3 +24,6 @@ htmlcov/
 .coverage
 .coverage.*
 *,cover
+
+# Txt exporter output
+examples/timings.txt

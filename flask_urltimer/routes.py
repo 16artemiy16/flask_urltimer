@@ -4,12 +4,23 @@ from datetime import datetime
 from .helpers import add_timemark, map_timemarks, get_timemarks
 from .exporters import TxtExporter
 
-bp = Blueprint(name='flask_urltimer', import_name=__name__, template_folder='templates')
+bp = Blueprint(
+    name='flask_urltimer',
+    import_name=__name__,
+    template_folder='templates',
+    static_url_path='',
+    static_folder="templates/timings",
+)
 
 
 @bp.get('/timings')
 def render_timings_ui():
     return render_template('timings-ui.html')
+
+
+@bp.get('/ui')
+def render_ui():
+    return render_template('timings/index.html')
 
 
 def register(app):
