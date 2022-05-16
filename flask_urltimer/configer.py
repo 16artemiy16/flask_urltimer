@@ -22,4 +22,4 @@ def get_by_key(app, key):
         log.debug(f'Config {key}={default_value} (default, not set in app config)')
         return default_value
 
-    raise AttributeError(f'The config is neither set or has value by this key: ${key}')
+    raise AttributeError(f'The config is neither set or has value by this key: {key}')
