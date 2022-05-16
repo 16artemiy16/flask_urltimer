@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from datetime import datetime
 
+from . import configer
 from .helpers import add_timemark, map_timemarks, get_timemarks
 from .exporters import TxtExporter
 
@@ -13,17 +14,18 @@ bp = Blueprint(
 )
 
 
-@bp.get('/timings')
-def render_timings_ui():
-    return render_template('timings-ui.html')
-
-
 @bp.get('/ui')
 def render_ui():
     return render_template('timings/index.html')
 
 
 def register(app):
+    ui_url = configer.get_by_key(app, configer.URLTIMER_URL_PATH)
+
+    @bp.get(f'/{ui_url}')
+    def render_timings_ui():
+        return render_template('timings-ui.html')
+
     @app.before_request
     def do_before():
         add_timemark('start')

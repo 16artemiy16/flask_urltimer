@@ -14,14 +14,14 @@ urltimer = FlaskUrltimer(app)
 @app.get('/first')
 def first():
     sum = 0
-    for i in range(100):
+    for i in range(10000):
         sum += 1
 
     add_timemark('After sum')
     time.sleep(0.5)
     add_timemark('After sleep')
 
-    for i in range(1000):
+    for i in range(10000):
         sum += 1
     return 'Hello from First!'
 

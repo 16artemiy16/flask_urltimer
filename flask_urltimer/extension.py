@@ -1,8 +1,5 @@
-import logging
-
 from . import routes
-
-log = logging.getLogger('flask_urltimer')
+from .log import log
 
 
 class FlaskUrltimer(object):
