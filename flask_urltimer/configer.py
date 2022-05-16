@@ -1,5 +1,5 @@
 """
-Configer helps to get/set the config options via app.
+Configer helps to get the config options via app.
 """
 
 from .log import log
