@@ -3,7 +3,7 @@ from datetime import datetime
 
 from . import configer
 from .helpers import add_timemark, map_timemarks, get_timemarks
-from .exporters import TxtExporter
+from . import storage
 
 bp = Blueprint(
     name='flask_urltimer',
@@ -28,8 +28,9 @@ def register(app):
 
     @bp.get('/timings/api/items')
     def get_items():
-        data = TxtExporter(app, []).importt()
-        return dict(items=data)
+        data = storage.importt(app)
+        res = dict(items=data)
+        return res
 
     @app.before_request
     def do_before():
@@ -46,7 +47,7 @@ def register(app):
             ),
             timemarks=map_timemarks(get_timemarks())
         )
-        TxtExporter(app, data).export()
+        storage.export(app, data)
         return res
 
     app.register_blueprint(bp)

@@ -5,9 +5,11 @@ Configer helps to get the config options via app.
 from .log import log
 
 URLTIMER_URL_PATH = 'URLTIMER_URL_PATH'
+URLTIMER_STORAGE_ENGINE = 'URLTIMER_STORAGE_ENGINE'
 
 defaults = {
     URLTIMER_URL_PATH: 'timings-ui',
+    URLTIMER_STORAGE_ENGINE: 'txt',
 }
 
 
