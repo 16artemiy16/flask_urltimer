@@ -12,5 +12,20 @@ class TxtExporter(Exporter):
         filepath = f'{self.app.root_path}/{filename}'
 
         with open(filepath, 'a') as f:
-            data_str = json.dumps([self.data])
+            data_str = json.dumps(self.data)
             f.write(f'{data_str}\n')
+
+    def importt(self):
+        filename = 'timings.txt'
+        filepath = f'{self.app.root_path}/{filename}'
+
+        data = []
+
+        with open(filepath, 'r') as f:
+            for line in f:
+                try:
+                    data.append(json.loads(line))
+                except json.JSONDecodeError:
+                    pass
+
+        return data

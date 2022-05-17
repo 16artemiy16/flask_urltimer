@@ -26,6 +26,11 @@ def register(app):
     def render_timings_ui():
         return render_template('timings-ui.html')
 
+    @bp.get('/timings/api/items')
+    def get_items():
+        data = TxtExporter(app, []).importt()
+        return dict(items=data)
+
     @app.before_request
     def do_before():
         add_timemark('start')

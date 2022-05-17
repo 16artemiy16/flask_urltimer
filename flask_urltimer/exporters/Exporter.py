@@ -13,3 +13,7 @@ class Exporter(ABC):
     @abstractmethod
     def export(self):
         pass
+
+    @abstractmethod
+    def importt(self):
+        pass
