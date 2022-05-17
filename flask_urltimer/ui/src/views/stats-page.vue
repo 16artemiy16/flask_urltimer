@@ -1,33 +1,56 @@
 <script setup lang="ts">
-import { Pie } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Legend, Tooltip, ArcElement } from 'chart.js'
+import { onMounted } from 'vue';
+import * as Highcharts from 'highcharts';
 
-ChartJS.register(Title, ArcElement, Legend, Tooltip)
+const stats = {
+  "timestamp": 1652705117.394714,
+  "req": {"url": "http://localhost:5000/first"},
+  "timemarks": {
+    "start": 0,
+    "After sum": 0.000685723000000138,
+    "After sleep": 0.502594117000001,
+    "end": 0.7036128370000021}
+}
 
-const chartData = {
-  labels: [
-    'Start - Mark 1',
-    'Mark 1 - Mark 2',
-    'Mark 2 - End'
-  ],
-  datasets: [{
-    label: 'Total: 6.2s',
-    data: [2, 1, 3.2],
-    backgroundColor: [
-      'rgb(255, 99, 132)',
-      'rgb(54, 162, 235)',
-      'rgb(255, 205, 86)'
-    ],
-  }]
-};
+const marksKeys = Object.keys(stats.timemarks);
+
+const data = [];
+marksKeys
+  .forEach((curKey, idx) => {
+    if (idx === 0) return;
+    const prevKey = marksKeys[idx - 1];
+    const prevValue = stats.timemarks[prevKey];
+    const curValue = stats.timemarks[curKey];
+
+    data.push({ name: `[${idx}] ${prevKey} - ${curKey}`, y: curValue - prevValue });
+  });
+
+const totalDuration = data.reduce((prev, { y }) => prev + y, 0);
+
+onMounted(() => {
+  Highcharts.chart('container', {
+    credits: { enabled: false },
+    chart: {
+      type: 'pie',
+    },
+    title: {
+      text: `${stats.req.url} total duration - ${totalDuration}ms`
+    },
+    series: [{
+      data,
+      name: 'ms',
+      colorByPoint: true,
+    }]
+  });
+})
+
+
 
 </script>
 
 
 <template>
-  <div class="chart-wrapper">
-    <Pie :chart-data="chartData"  />
-  </div>
+  <div id="container"></div>
 </template>
 
 <style scoped lang="scss">
