@@ -2,7 +2,7 @@ import time
 import logging
 
 from flask import Flask
-from flask_urltimer import FlaskUrltimer, add_timemark, log as flask_urltimer_logger
+from flask_urltimer import FlaskUrltimer, add_timemark, log as flask_urltimer_logger, check_source
 
 logging.basicConfig(level=logging.INFO)
 flask_urltimer_logger.level = logging.DEBUG
@@ -12,6 +12,7 @@ urltimer = FlaskUrltimer(app)
 
 
 @app.get('/first')
+@check_source
 def first():
     sum = 0
     for i in range(10000):
@@ -24,6 +25,12 @@ def first():
     for i in range(10000):
         sum += 1
     return 'Hello from First!'
+
+@app.get('/second')
+def second():
+    import inspect
+
+    return dict(code=inspect.getsource(first))
 
 
 if __name__ == '__main__':

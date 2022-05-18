@@ -1,4 +1,5 @@
 from timeit import default_timer as timer
+import inspect
 from flask import g
 
 _TIMEMARKS_ATTR = '__flask_urltimer_timer'
@@ -22,3 +23,19 @@ def map_timemarks(timemarks):
         results[key] = value - start if key != 'start' else 0
 
     return results
+
+
+
+_FN_SOURCE_ATTR = '__flask_urltimer_fnsource'
+
+
+def check_source(fn):
+    def inner(*args, **kwargs):
+        setattr(g, _FN_SOURCE_ATTR, inspect.getsource(fn))
+        return fn(*args, **kwargs)
+
+    return inner
+
+
+def get_checked_source():
+    return getattr(g, _FN_SOURCE_ATTR, None)
