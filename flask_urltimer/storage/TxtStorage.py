@@ -21,13 +21,16 @@ class TxtStorage(Storage):
         filepath = f'{self.app.root_path}/{filename}'
 
         data = []
-
-        with open(filepath, 'r') as f:
-            for line in f:
-                try:
-                    data.append(json.loads(line))
-                except json.JSONDecodeError:
-                    log.debug(f'TxtStorage failed to decode JSON from line {line}')
-                    pass
+        try:
+            with open(filepath, 'r') as f:
+                for line in f:
+                    try:
+                        data.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        log.debug(f'TxtStorage failed to decode JSON from line {line}')
+                        pass
+        except FileNotFoundError:
+            log.debug(f'TxtStorage returning empty list as file is not found by path {filepath}')
+            pass
 
         return data
