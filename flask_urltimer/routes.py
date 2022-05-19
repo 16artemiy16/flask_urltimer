@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from datetime import datetime
+import atexit
 
 from . import configer
 from .helpers import add_timemark, map_timemarks, get_timemarks, get_checked_source
@@ -51,3 +52,8 @@ def register(app):
         return res
 
     app.register_blueprint(bp)
+
+    @atexit.register
+    def cleanup():
+        if configer.get_by_key(app, configer.URLTIMER_CLEANUP_ON_SHUTDOWN):
+            storage.cleanup(app)

@@ -24,4 +24,4 @@ class TestImport:
         with patch('builtins.open', new=mock_open(read_data=mocked_text)) as _file:
             data = TxtStorage(app).importt()
             _file.assert_called_once_with(filepath, 'r')
-            assert data == [dict(first=1, second='hi'), dict(first=21, second='hello')]
+            assert data == [dict(first=1, second='hi'), dict(first=2, second='hello')]

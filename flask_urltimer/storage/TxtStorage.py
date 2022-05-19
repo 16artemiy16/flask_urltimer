@@ -1,4 +1,5 @@
 import json
+import os
 from . import Storage
 from ..log import log
 
@@ -8,21 +9,21 @@ class TxtStorage(Storage):
     TxtStorage is used to import/export data to/from txt file.
     Each item will be placed in a separate line and represents a JSON object.
     """
-    def export(self, data):
-        filename = 'timings.txt'
-        filepath = f'{self.app.root_path}/{filename}'
 
-        with open(filepath, 'a') as f:
+    @property
+    def _filepath(self):
+        filename = 'timings.txt'
+        return f'{self.app.root_path}/{filename}'
+
+    def export(self, data):
+        with open(self._filepath, 'a') as f:
             data_str = json.dumps(data)
             f.write(f'{data_str}\n')
 
     def importt(self):
-        filename = 'timings.txt'
-        filepath = f'{self.app.root_path}/{filename}'
-
         data = []
         try:
-            with open(filepath, 'r') as f:
+            with open(self._filepath, 'r') as f:
                 for line in f:
                     try:
                         data.append(json.loads(line))
@@ -30,7 +31,14 @@ class TxtStorage(Storage):
                         log.debug(f'TxtStorage failed to decode JSON from line {line}')
                         pass
         except FileNotFoundError:
-            log.debug(f'TxtStorage returning empty list as file is not found by path {filepath}')
+            log.debug(f'TxtStorage returning empty list as file is not found by path {self._filepath}')
             pass
 
         return data
+
+    def cleanup(self):
+        try:
+            os.unlink(self._filepath)
+            log.debug(f'TxtStorage cleanup succeed - removed {self._filepath}')
+        except FileNotFoundError:
+            log.debug(f'TxtStorage cleanup skipped - no file by path {self._filepath}')

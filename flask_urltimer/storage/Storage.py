@@ -14,3 +14,7 @@ class Storage(ABC):
     @abstractmethod
     def importt(self):
         pass
+
+    @abstractmethod
+    def cleanup(self):
+        pass

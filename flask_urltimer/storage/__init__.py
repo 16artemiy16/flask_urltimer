@@ -19,20 +19,24 @@ def _get_storage_by_app(app):
     if engine_cls is None:
         raise TypeError(f'{engine_str} is an incorrect engine. Only {list(_engine_str_cls_map.keys())} are available.')
 
-    return engine_cls
+    return engine_cls(app)
 
 
 def export(app, data):
     storage = _get_storage_by_app(app)
-    storage(app).export(data)
+    storage.export(data)
 
 
 def importt(app):
     storage = _get_storage_by_app(app)
-    return storage(app).importt()
+    return storage.importt()
 
+
+def cleanup(app):
+    _get_storage_by_app(app).cleanup()
 
 __all__ = [
     'export',
-    'importt'
+    'importt',
+    'cleanup',
 ]
