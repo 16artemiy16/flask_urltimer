@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { isLoadingItems, fetchItems, sortedStatItems, toggleSorting, getFieldSorting } from '@/store/stats.store';
+import {
+  isLoadingItems,
+  fetchItems,
+  sortedStatItems,
+  toggleSorting,
+  getFieldSorting,
+  statsItemsUrls,
+} from '@/store/stats.store';
 
 fetchItems();
-
-const calcMarkDuration = (mark: Record<string, number>): number => {
-    const {start, end} = mark;
-    return end - start;
-};
 
 </script>
 
 <template>
+  <ul>
+    <li v-for="url in statsItemsUrls" :key="url">{{ url }}</li>
+  </ul>
   <div>
     <h2>Sorting</h2>
+    <div>
+      Duration: {{ getFieldSorting('duration') || 'No' }}
+      <button @click="toggleSorting('duration')">Toggle</button>
+    </div>
     <div>
       Timestamp: {{ getFieldSorting('timestamp') || 'No' }}
       <button @click="toggleSorting('timestamp')">Toggle</button>
@@ -24,7 +33,7 @@ const calcMarkDuration = (mark: Record<string, number>): number => {
         v-for="item in sortedStatItems"
         :key="item.timestamp"
     >
-      <div>{{ item.req.url }} ({{ calcMarkDuration(item.timemarks) }}ms)</div>
+      <div>{{ item.req.url }} ({{ item.duration }}ms)</div>
     </div>
   </div>
 </template>

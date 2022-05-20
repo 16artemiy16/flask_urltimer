@@ -15,6 +15,14 @@ export const statItems = result;
 export const fetchItems = request;
 export const isLoadingItems = isLoading;
 
+export const statsItemsUrls = computed(() => {
+  return Array.from(
+    new Set(
+      statItems.value.map(({ req }) => req.url)
+    )
+  );
+});
+
 export const sorting = ref<SortingI | null>(null);
 
 export const getFieldSorting = (field: keyof StatItemI): SortingDir | null => {
@@ -54,7 +62,7 @@ export const sortedStatItems = computed(() => {
   }
   const { field, dir } = sorting.value as SortingI;
   return [...statItems.value].sort((a, b) => {
-    const multiplier = dir === 'asc' ? -1 : 1;
+    const multiplier = dir === 'desc' ? -1 : 1;
     const v1: any = a[field];
     const v2: any = b[field];
     return (v1 - v2) * multiplier;

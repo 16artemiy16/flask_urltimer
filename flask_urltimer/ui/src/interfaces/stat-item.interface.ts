@@ -1,9 +1,10 @@
 export interface StatItemI {
-  uuid: string,
+  uuid: string;
+  duration: number;
   req: {
-    url: string,
+    url: string;
   }
-  source: string | null
-  timemarks: Record<string, number>
+  source: string | null;
+  timemarks: Record<string, number>;
   timestamp: number;
 }
