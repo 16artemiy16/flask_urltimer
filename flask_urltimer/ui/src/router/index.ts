@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Stats from '@/views/stats-page.vue';
+import StatsList from '@/views/stats-list.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    component: Stats,
+    component: StatsList,
   }
 ]
 
