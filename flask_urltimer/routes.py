@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from datetime import datetime
 import atexit
+import uuid
 
 from . import configer
 from .helpers import add_timemark, map_timemarks, get_timemarks, get_checked_source
@@ -41,6 +42,7 @@ def register(app):
     def do_after(res):
         add_timemark('end')
         data = dict(
+            id=uuid.uuid4().hex,
             timestamp=datetime.timestamp(datetime.now()),
             req=dict(
                 url=request.url

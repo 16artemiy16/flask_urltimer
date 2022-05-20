@@ -1,4 +1,5 @@
 export interface StatItemI {
+  uuid: string,
   req: {
     url: string,
   }
