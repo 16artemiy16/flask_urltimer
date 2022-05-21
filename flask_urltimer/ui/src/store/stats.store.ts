@@ -15,10 +15,10 @@ export const statItems = result;
 export const fetchItems = request;
 export const isLoadingItems = isLoading;
 
-export const statsItemsUrls = computed(() => {
+export const statsItemsPaths = computed(() => {
   return Array.from(
     new Set(
-      statItems.value.map(({ req }) => req.url)
+      statItems.value.map(({ req }: any) => req.path)
     )
   );
 });

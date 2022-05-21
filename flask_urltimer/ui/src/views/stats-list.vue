@@ -5,7 +5,7 @@ import {
   sortedStatItems,
   toggleSorting,
   getFieldSorting,
-  statsItemsUrls,
+  statsItemsPaths,
 } from '@/store/stats.store';
 
 fetchItems();
@@ -14,7 +14,7 @@ fetchItems();
 
 <template>
   <ul>
-    <li v-for="url in statsItemsUrls" :key="url">{{ url }}</li>
+    <li v-for="url in statsItemsPaths" :key="url">{{ url }}</li>
   </ul>
   <div>
     <h2>Sorting</h2>
@@ -33,7 +33,7 @@ fetchItems();
         v-for="item in sortedStatItems"
         :key="item.timestamp"
     >
-      <div>{{ item.req.url }} ({{ item.duration }}ms)</div>
+      <div>{{ item.req.path }} ({{ item.duration }}ms)</div>
     </div>
   </div>
 </template>

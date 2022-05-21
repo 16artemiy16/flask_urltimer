@@ -3,6 +3,7 @@ export interface StatItemI {
   duration: number;
   req: {
     url: string;
+    path: string;
   }
   source: string | null;
   timemarks: Record<string, number>;

@@ -13,7 +13,17 @@ export const useGetStatsList = () => {
     return fetch(getStatsListURL)
       .then(async (res) => {
         isLoading.value = false;
-        result.value = await res.json().then(({ items }) => items);
+        result.value = await res.json()
+          .then(({ items }) => items)
+          .then((items) => {
+            return items.map((item: StatItemI) => ({
+              ...item,
+              req: {
+                ...item.req,
+                path: new URL(item.req.url).pathname
+              },
+            }));
+          });
         return result.value;
       })
       .catch((e) => {
