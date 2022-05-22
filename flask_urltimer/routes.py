@@ -46,6 +46,9 @@ def register(app):
 
     @app.after_request
     def do_after(res):
+        if not get_checked_source():
+            return res
+
         add_timemark('end')
         data = dict(
             id=uuid.uuid4().hex,

@@ -26,11 +26,15 @@ def first():
         sum += 1
     return 'Hello from First!'
 
-@app.get('/second')
-def second():
-    import inspect
 
-    return dict(code=inspect.getsource(first))
+@app.get('/second')
+@check_source
+def second():
+    time.sleep(0.3)
+    add_timemark('Wake up')
+    time.sleep(0.8)
+    add_timemark(0.3)
+    return 'Finish'
 
 
 if __name__ == '__main__':

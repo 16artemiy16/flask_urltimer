@@ -34,6 +34,8 @@ def check_source(fn):
         setattr(g, _FN_SOURCE_ATTR, inspect.getsource(fn))
         return fn(*args, **kwargs)
 
+    inner.__name__ = fn.__name__
+
     return inner
 
 
