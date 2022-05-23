@@ -15,7 +15,7 @@ urltimer = FlaskUrltimer(app)
 @check_source
 def first():
     sum = 0
-    for i in range(10000):
+    for i in range(100000):
         sum += 1
 
     add_timemark('After sum')

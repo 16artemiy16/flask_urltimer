@@ -67,4 +67,4 @@ export const sortedStatItems = computed(() => {
     const v2: any = b[field];
     return (v1 - v2) * multiplier;
   });
-})
+});

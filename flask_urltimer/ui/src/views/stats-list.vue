@@ -33,7 +33,10 @@ fetchItems();
         v-for="item in sortedStatItems"
         :key="item.timestamp"
     >
-      <div>{{ item.req.path }} ({{ item.duration }}ms)</div>
+      <div>
+        <router-link :to="{ path: '/' + item.id }">{{ item.req.path }}</router-link>
+        ({{ item.duration }}ms)
+      </div>
     </div>
   </div>
 </template>

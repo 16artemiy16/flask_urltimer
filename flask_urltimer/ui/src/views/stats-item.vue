@@ -1,36 +1,16 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import * as Highcharts from 'highcharts';
+import { statItems } from '@/store/stats.store';
+import { useRoute } from 'vue-router';
 
-const stats = {
-  "timestamp": 1652705117.394714,
-  "req": {"url": "http://localhost:5000/first"},
-  "timemarks": {
-    "start": 0,
-    "After sum": 0.2036128370000021,
-    "After sleep": 0.502594117000001,
-    "end": 0.7036128370000021},
-  "source": `
-@app.get('/first')
-@check_source
-def first():
-    sum = 0
-    for i in range(10000):
-      sum += 1
-
-    add_timemark('After sum')
-    time.sleep(0.5)
-    add_timemark('After sleep')
-
-    for i in range(10000):
-      sum += 1
-    return 'Hello from First!'
-  `.trim(),
-}
-
-const marksKeys = Object.keys(stats.timemarks);
+const stats = statItems.value.find(({ id }) => id === useRoute().params.id);
 
 const data = [];
+
+const marksKeys = Object.keys(stats.timemarks)
+    .sort((a, b) => stats.timemarks[a] - stats.timemarks[b]);
+
 marksKeys
   .forEach((curKey, idx) => {
     if (idx === 0) return;
@@ -41,8 +21,6 @@ marksKeys
     data.push({ name: `[${idx}] ${prevKey} - ${curKey}`, y: curValue - prevValue });
   });
 
-const totalDuration = data.reduce((prev, { y }) => prev + y, 0);
-
 onMounted(() => {
   Highcharts.chart('container', {
     credits: { enabled: false },
@@ -50,7 +28,7 @@ onMounted(() => {
       type: 'pie',
     },
     title: {
-      text: `${stats.req.url} total duration - ${totalDuration}ms`
+      text: `${stats.req.url} total duration - ${stats.duration}ms`
     },
     series: [{
       data,
