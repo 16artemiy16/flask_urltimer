@@ -28,7 +28,7 @@ onMounted(() => {
       type: 'pie',
     },
     title: {
-      text: `${stats.req.url} total duration - ${stats.duration}ms`
+      text: `${stats.req.path} total duration - ${stats.duration}ms`
     },
     series: [{
       data,
