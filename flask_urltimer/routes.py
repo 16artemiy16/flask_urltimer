@@ -31,7 +31,7 @@ def register(app):
     @bp.get('/timings/api/items')
     def get_items():
         def add_total_duration(item):
-            item['duration'] = round(item['timemarks']['end'] - item['timemarks']['start'], 4)
+            item['duration'] = round(item['timemarks']['end'][0] - item['timemarks']['start'][0], 4)
             return item
 
         data = storage.importt(app)

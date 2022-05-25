@@ -5,7 +5,10 @@ export interface StatItemI {
     url: string;
     path: string;
   }
-  source: string | null;
-  timemarks: Record<string, number>;
+  source: {
+    lines: string,
+    linenum: number,
+  }[];
+  timemarks: Record<string, [number, number]>;
   timestamp: number;
 }

@@ -9,14 +9,14 @@ const stats = statItems.value.find(({ id }) => id === useRoute().params.id);
 const data = [];
 
 const marksKeys = Object.keys(stats.timemarks)
-    .sort((a, b) => stats.timemarks[a] - stats.timemarks[b]);
+    .sort((a, b) => stats.timemarks[a][0] - stats.timemarks[b][0]);
 
 marksKeys
   .forEach((curKey, idx) => {
     if (idx === 0) return;
     const prevKey = marksKeys[idx - 1];
-    const prevValue = stats.timemarks[prevKey];
-    const curValue = stats.timemarks[curKey];
+    const prevValue = stats.timemarks[prevKey][0];
+    const curValue = stats.timemarks[curKey][0];
 
     data.push({ name: `[${idx}] ${prevKey} - ${curKey}`, y: curValue - prevValue });
   });
@@ -43,7 +43,7 @@ onMounted(() => {
 
 <template>
   <div id="container"></div>
-  <pre><code>{{ stats.source }}</code></pre>
+  <pre><code>{{ stats.source.lines.join('') }}</code></pre>
 </template>
 
 <style scoped lang="scss">
