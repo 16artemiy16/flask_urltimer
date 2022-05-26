@@ -28,15 +28,38 @@ fetchItems();
     </div>
   </div>
   <div v-if="isLoadingItems">Loading</div>
-  <div v-else>
+
+  <div>
+    <div class="row">
+      <div class="c1">path</div>
+      <div class="c2">time, ms</div>
+      <div class="c2">Date and time</div>
+    </div>
     <div
-        v-for="item in sortedStatItems"
-        :key="item.timestamp"
+      class="row"
+      v-for="item in sortedStatItems"
+      :key="item.timestamp"
     >
-      <div>
+      <div class="c1">
         <router-link :to="{ path: '/' + item.id }">{{ item.req.path }}</router-link>
-        ({{ item.duration }}ms)
       </div>
+      <div class="c2">{{ item.duration }}</div>
+      <div class="c3">{{ new Date(item.timestamp).toLocaleString() }}</div>
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.row {
+  display: flex;
+}
+.c1 {
+  width: 100px;
+}
+.c2 {
+  width: 150px;
+}
+.c3 {
+  width: 250px;
+}
+</style>

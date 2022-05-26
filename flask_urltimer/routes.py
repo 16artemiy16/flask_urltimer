@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from datetime import datetime
+from time import time
 import atexit
 import uuid
 
@@ -52,7 +52,7 @@ def register(app):
         add_timemark('end')
         data = dict(
             id=uuid.uuid4().hex,
-            timestamp=datetime.timestamp(datetime.now()),
+            timestamp=int(time()*1000),
             req=dict(
                 url=request.url
             ),
