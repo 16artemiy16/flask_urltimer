@@ -43,7 +43,13 @@ onMounted(() => {
 
 <template>
   <div id="container"></div>
-  <pre><code>{{ stats.source.lines.join('') }}</code></pre>
+  <div>
+    <div
+      style="white-space: pre"
+      :key="line"
+      v-for="line in stats.source.lines"
+    >{{ line }}</div>
+  </div>
 </template>
 
 <style scoped lang="scss">

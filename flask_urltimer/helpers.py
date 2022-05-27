@@ -20,12 +20,22 @@ def find_line(find_filename, find_fn):
 
 def add_timemark(name):
     line = None
+    line_start = (get_checked_source() or dict(linenum=0))['linenum']
+
     if name != 'start' and name != 'end':
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])
         line = find_line(module.__file__, frame.function)
+
+    if name == 'start':
+        line = 0
+    if name == 'end':
+        line = len(get_checked_source()['lines']) + line_start
+
+    line_relative = line - line_start
+
     marks = get_timemarks()
-    marks[name] = [timer(), line]
+    marks[name] = [timer(), line_relative]
     setattr(g, _TIMEMARKS_ATTR, marks)
 
 
