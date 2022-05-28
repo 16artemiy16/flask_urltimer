@@ -1,6 +1,7 @@
 import { useGetStatsList } from '@/composables/stats-api';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 type SortingDir = 'asc' | 'desc';
 
@@ -14,6 +15,10 @@ const { request, isLoading, result } = useGetStatsList();
 export const statItems = result;
 export const fetchItems = request;
 export const isLoadingItems = isLoading;
+
+export const currentStat = computed<StatItemI | undefined>(() => {
+  return statItems.value.find(({ id }) => id === useRoute().params.id);
+})
 
 export const statsItemsPaths = computed(() => {
   return Array.from(

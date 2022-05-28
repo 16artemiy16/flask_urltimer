@@ -1,41 +1,16 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import * as Highcharts from 'highcharts';
-import { statItems } from '@/store/stats.store';
-import { useRoute } from 'vue-router';
+import { currentStat } from '@/store/stats.store';
+import useStatsChart from '@/composables/use-stats-chart';
 
-const stats = statItems.value.find(({ id }) => id === useRoute().params.id);
+const { draw } = useStatsChart('container');
 
-const data = [];
-
-const marksKeys = Object.keys(stats.timemarks)
-    .sort((a, b) => stats.timemarks[a][0] - stats.timemarks[b][0]);
-
-marksKeys
-  .forEach((curKey, idx) => {
-    if (idx === 0) return;
-    const prevKey = marksKeys[idx - 1];
-    const prevValue = stats.timemarks[prevKey][0];
-    const curValue = stats.timemarks[curKey][0];
-
-    data.push({ name: `[${idx}] ${prevKey} - ${curKey}`, y: curValue - prevValue });
-  });
+const stats = currentStat.value;
 
 onMounted(() => {
-  Highcharts.chart('container', {
-    credits: { enabled: false },
-    chart: {
-      type: 'pie',
-    },
-    title: {
-      text: `${stats.req.path} total duration - ${stats.duration}ms`
-    },
-    series: [{
-      data,
-      name: 'ms',
-      colorByPoint: true,
-    }]
-  });
+  if (stats) {
+    draw(stats);
+  }
 })
 
 </script>
@@ -43,12 +18,17 @@ onMounted(() => {
 
 <template>
   <div id="container"></div>
-  <div>
+  <div v-if="stats">
     <div
       style="white-space: pre"
       :key="line"
-      v-for="line in stats.source.lines"
+      v-for="(line, idx) in stats.source.lines"
+      :class="['line-' + idx]"
     >{{ line }}</div>
+  </div>
+  <div v-else>
+    Stats with this ID does not exist! <br />
+    <router-link to="/">Back</router-link>
   </div>
 </template>
 
