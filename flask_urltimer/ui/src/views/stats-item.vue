@@ -2,6 +2,8 @@
 import { onMounted } from 'vue';
 import { currentStat } from '@/store/stats.store';
 import useStatsChart from '@/composables/use-stats-chart';
+import { StatItemI } from '@/interfaces/stat-item.interface';
+import { getColorByIdx } from '@/helpers/coloriser';
 
 const { draw } = useStatsChart('container');
 
@@ -13,6 +15,8 @@ onMounted(() => {
   }
 })
 
+const getStyleByIdx = (idx: number) => ({ background: getColorByIdx(stats as StatItemI, idx) });
+
 </script>
 
 
@@ -20,10 +24,10 @@ onMounted(() => {
   <div id="container"></div>
   <div v-if="stats">
     <div
-      style="white-space: pre"
+      class="line"
+      :style="getStyleByIdx(idx)"
       :key="line"
       v-for="(line, idx) in stats.source.lines"
-      :class="['line-' + idx]"
     >{{ line }}</div>
   </div>
   <div v-else>
@@ -36,5 +40,9 @@ onMounted(() => {
 .chart-wrapper {
   width: 500px;
   height: 500px;
+}
+
+.line {
+  white-space: pre;
 }
 </style>

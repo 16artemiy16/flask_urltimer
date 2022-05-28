@@ -1,12 +1,14 @@
 import * as Highcharts from 'highcharts';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import statsToChartData from '@/helpers/stats-to-chart-data';
+import { colors } from '@/constants';
 
 const useStatsChart = (selector: string) => {
   const draw = (stats: StatItemI) => {
     const data = statsToChartData(stats);
 
     Highcharts.chart(selector, {
+      colors,
       credits: { enabled: false },
       chart: {
         type: 'pie',
