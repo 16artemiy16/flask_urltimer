@@ -22,9 +22,17 @@ export const getTimemarkNameByLine = (stats: StatItemI, idx: number): string => 
   return lastCandidateName;
 };
 
-export const getColorByIdx = (stats: StatItemI, idx: number): string => {
+export const getPieceOrderByLine = (stats: StatItemI, idx: number): number => {
   const name = getTimemarkNameByLine(stats, idx);
   const marks = getSortedMarkNames(stats.timemarks);
-  const colorIdx = marks.findIndex((v) => v === name);
-  return colors[colorIdx];
+  return marks.findIndex((v) => v === name);
 };
+
+export const getColorByIdx = (stats: StatItemI, idx: number): string => {
+  return colors[getPieceOrderByLine(stats, idx)];
+};
+
+export const getPieceBySeriesName = (name: string): number => {
+  // TODO: workaround for now
+  return +name[1] - 1;
+}

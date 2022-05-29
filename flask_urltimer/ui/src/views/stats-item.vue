@@ -3,9 +3,9 @@ import { onMounted } from 'vue';
 import { currentStat } from '@/store/stats.store';
 import useStatsChart from '@/composables/use-stats-chart';
 import { StatItemI } from '@/interfaces/stat-item.interface';
-import { getColorByIdx } from '@/helpers/coloriser';
+import { getColorByIdx, getPieceBySeriesName, getPieceOrderByLine } from '@/helpers/coloriser';
 
-const { draw } = useStatsChart('container');
+const { draw, selectedNames } = useStatsChart('container');
 
 const stats = currentStat.value;
 
@@ -15,7 +15,14 @@ onMounted(() => {
   }
 })
 
-const getStyleByIdx = (idx: number) => ({ background: getColorByIdx(stats as StatItemI, idx) });
+const getStyleByIdx = (idx: number): Record<string, any> => {
+  const order = getPieceOrderByLine(stats as StatItemI, idx);
+  const opacity = selectedNames.size && getPieceBySeriesName([...selectedNames][0]) !== order ? 0.5 : 1;
+  return {
+    opacity,
+    background: getColorByIdx(stats as StatItemI, idx),
+  };
+}
 
 </script>
 
