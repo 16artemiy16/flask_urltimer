@@ -16,17 +16,12 @@ bp = Blueprint(
 )
 
 
-@bp.get('/ui')
-def render_ui():
-    return render_template('timings/index.html')
-
-
 def register(app):
     ui_url = configer.get_by_key(app, configer.URLTIMER_URL_PATH)
 
     @bp.get(f'/{ui_url}')
-    def render_timings_ui():
-        return render_template('timings-ui.html')
+    def render_ui():
+        return render_template('timings/index.html')
 
     @bp.get('/timings/api/items')
     def get_items():
