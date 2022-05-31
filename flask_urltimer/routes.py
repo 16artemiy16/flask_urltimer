@@ -1,10 +1,9 @@
-from flask import Blueprint, render_template, request
-from time import time
+from flask import Blueprint, render_template, request, g
 import atexit
-import uuid
 
 from . import configer
-from .helpers import add_timemark, map_timemarks, get_timemarks, get_checked_source
+from .helpers import add_timemark, get_checked_source
+from .timemark_builder import init_timememark_builder, get_timemark_builder
 from . import storage
 
 bp = Blueprint(
@@ -25,18 +24,14 @@ def register(app):
 
     @bp.get('/timings/api/items')
     def get_items():
-        def add_total_duration(item):
-            item['duration'] = round(item['timemarks']['end'][0] - item['timemarks']['start'][0], 4)
-            return item
-
         data = storage.importt(app)
-
-        data = [add_total_duration(i) for i in data]
         res = dict(items=data)
         return res
 
     @app.before_request
     def do_before():
+        init_timememark_builder()
+        get_timemark_builder().add_timemark('start')
         add_timemark('start')
 
     @app.after_request
@@ -45,16 +40,8 @@ def register(app):
             return res
 
         add_timemark('end')
-        data = dict(
-            id=uuid.uuid4().hex,
-            timestamp=int(time()*1000),
-            req=dict(
-                url=request.url
-            ),
-            timemarks=map_timemarks(get_timemarks()),
-            source=get_checked_source()
-        )
-        storage.export(app, data)
+        get_timemark_builder().set_req_url(request.url)
+        storage.export(app, get_timemark_builder().build())
         return res
 
     app.register_blueprint(bp)

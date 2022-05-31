@@ -1,14 +1,8 @@
-from timeit import default_timer as timer
 import inspect
 import sys
 import traceback
 from flask import g
-
-_TIMEMARKS_ATTR = '__flask_urltimer_timer'
-
-
-def get_timemarks():
-    return getattr(g, _TIMEMARKS_ATTR,  {})
+from .timemark_builder import get_timemark_builder
 
 
 def find_line(find_filename, find_fn):
@@ -34,9 +28,7 @@ def add_timemark(name):
 
     line_relative = line - line_start
 
-    marks = get_timemarks()
-    marks[name] = [timer(), line_relative]
-    setattr(g, _TIMEMARKS_ATTR, marks)
+    get_timemark_builder().add_timemark(name, line_relative)
 
 
 def map_timemarks(timemarks):
@@ -58,6 +50,7 @@ def check_source(fn):
     def inner(*args, **kwargs):
         lines, linenum = inspect.getsourcelines(fn)
         setattr(g, _FN_SOURCE_ATTR, dict(lines=lines, linenum=linenum))
+        get_timemark_builder().set_source(dict(lines=lines, linenum=linenum))
         return fn(*args, **kwargs)
 
     inner.__name__ = fn.__name__

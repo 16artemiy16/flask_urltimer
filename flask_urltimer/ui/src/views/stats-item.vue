@@ -28,7 +28,15 @@ const getStyleByIdx = (idx: number): Record<string, any> => {
 
 
 <template>
-  <div id="container"></div>
+  <div style="display: flex">
+    <div style="width: 700px;">
+      <div id="container"></div>
+    </div>
+    <div>
+      <h3>{{ [...selectedNames][0] }}</h3>
+    </div>
+  </div>
+
   <div v-if="stats">
     <div
       class="line"
