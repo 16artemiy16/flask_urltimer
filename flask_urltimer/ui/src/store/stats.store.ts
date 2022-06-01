@@ -1,6 +1,6 @@
 import { useGetStatsList } from '@/composables/stats-api';
 import { StatItemI } from '@/interfaces/stat-item.interface';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 type SortingDir = 'asc' | 'desc';
@@ -16,9 +16,22 @@ export const statItems = result;
 export const fetchItems = request;
 export const isLoadingItems = isLoading;
 
-export const currentStat = computed<StatItemI | undefined>(() => {
-  return statItems.value.find(({ id }) => id === useRoute().params.id);
-})
+export const isFirstLoad = ref<boolean>(true);
+
+const isFirstLoadWatcher = watch(statItems, () => {
+  isFirstLoad.value = false;
+  isFirstLoadWatcher();
+});
+
+export const fetchIfFirstLoad = () => {
+  if (isFirstLoad.value) {
+    request();
+  }
+};
+
+export const getStatById = (id: string): StatItemI | undefined => {
+  return statItems.value.find((item) => item.id === id);
+};
 
 export const statsItemsPaths = computed(() => {
   return Array.from(

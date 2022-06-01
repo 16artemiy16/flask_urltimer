@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {
   isLoadingItems,
-  fetchItems,
   sortedStatItems,
   toggleSorting,
   getFieldSorting,
   statsItemsPaths,
+  fetchIfFirstLoad,
 } from '@/store/stats.store';
 
-fetchItems();
+fetchIfFirstLoad();
 
 </script>
 

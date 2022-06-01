@@ -1,26 +1,31 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { currentStat } from '@/store/stats.store';
+import { computed, onMounted, watch } from 'vue';
+import { getStatById, fetchIfFirstLoad, fetchItems } from '@/store/stats.store';
 import useStatsChart from '@/composables/use-stats-chart';
 import { StatItemI } from '@/interfaces/stat-item.interface';
+import { useRoute } from 'vue-router';
 import { getColorByIdx, getPieceBySeriesName, getPieceOrderByLine } from '@/helpers/coloriser';
 
+fetchIfFirstLoad();
+const { params } = useRoute();
 const { draw, selectedNames } = useStatsChart('container');
 
-const stats = currentStat.value;
+const stats = computed<StatItemI | undefined>(() => getStatById(params.id as string));
 
 onMounted(() => {
-  if (stats) {
-    draw(stats);
-  }
-})
+  watch(stats, (value) => {
+    if (value) {
+      draw(value as StatItemI);
+    }
+  }, { immediate: true });
+});
 
 const getStyleByIdx = (idx: number): Record<string, any> => {
-  const order = getPieceOrderByLine(stats as StatItemI, idx);
+  const order = getPieceOrderByLine(stats.value as StatItemI, idx);
   const opacity = selectedNames.size && getPieceBySeriesName([...selectedNames][0]) !== order ? 0.5 : 1;
   return {
     opacity,
-    background: getColorByIdx(stats as StatItemI, idx),
+    background: getColorByIdx(stats.value as StatItemI, idx),
   };
 }
 
