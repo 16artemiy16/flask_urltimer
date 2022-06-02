@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue';
-import { getStatById, fetchIfFirstLoad, fetchItems } from '@/store/stats.store';
+import { getStatById, fetchIfFirstLoad, setSelectedPiece, selectedPiece } from '@/store/stats.store';
 import useStatsChart from '@/composables/use-stats-chart';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import { useRoute } from 'vue-router';
@@ -8,7 +8,7 @@ import { getColorByIdx, getPieceBySeriesName, getPieceOrderByLine } from '@/help
 
 fetchIfFirstLoad();
 const { params } = useRoute();
-const { draw, selectedNames } = useStatsChart('container');
+const { draw, selectedPieceName } = useStatsChart('container');
 
 const stats = computed<StatItemI | undefined>(() => getStatById(params.id as string));
 
@@ -18,16 +18,17 @@ onMounted(() => {
       draw(value as StatItemI);
     }
   }, { immediate: true });
+  watch(selectedPieceName, (name) => setSelectedPiece(name));
 });
 
 const getStyleByIdx = (idx: number): Record<string, any> => {
   const order = getPieceOrderByLine(stats.value as StatItemI, idx);
-  const opacity = selectedNames.size && getPieceBySeriesName([...selectedNames][0]) !== order ? 0.5 : 1;
+  const opacity = selectedPieceName.value && getPieceBySeriesName(selectedPieceName.value as string) !== order ? 0.5 : 1;
   return {
     opacity,
     background: getColorByIdx(stats.value as StatItemI, idx),
   };
-}
+};
 
 </script>
 
@@ -37,8 +38,8 @@ const getStyleByIdx = (idx: number): Record<string, any> => {
     <div style="width: 700px;">
       <div id="container"></div>
     </div>
-    <div>
-      <h3>{{ [...selectedNames][0] }}</h3>
+    <div v-if="selectedPiece">
+      <h3>{{ selectedPiece.name }}</h3>
     </div>
   </div>
 

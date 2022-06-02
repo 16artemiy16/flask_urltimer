@@ -1,7 +1,6 @@
 import { useGetStatsList } from '@/composables/stats-api';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import { computed, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
 
 type SortingDir = 'asc' | 'desc';
 
@@ -13,7 +12,6 @@ interface SortingI {
 const { request, isLoading, result } = useGetStatsList();
 
 export const statItems = result;
-export const fetchItems = request;
 export const isLoadingItems = isLoading;
 
 export const isFirstLoad = ref<boolean>(true);
@@ -86,3 +84,11 @@ export const sortedStatItems = computed(() => {
     return (v1 - v2) * multiplier;
   });
 });
+
+
+export const selectedPiece = ref<any>(null);
+export const setSelectedPiece = (name: string) => {
+  selectedPiece.value = {
+    name,
+  };
+};

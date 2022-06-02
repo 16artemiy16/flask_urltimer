@@ -2,10 +2,11 @@ import * as Highcharts from 'highcharts';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import statsToChartData from '@/helpers/stats-to-chart-data';
 import { colors } from '@/constants';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 const useStatsChart = (selector: string) => {
   const selectedNames = reactive<Set<string>>(new Set<string>());
+  const selectedPieceName = ref<null | string>();
   const draw = (stats: StatItemI) => {
     const data = statsToChartData(stats);
 
@@ -26,10 +27,12 @@ const useStatsChart = (selector: string) => {
         point:{
           events:{
             select: function (event: any) {
-              selectedNames.add(event.target.name)
+              selectedPieceName.value = event.target.name;
             },
             unselect: function (event: any) {
-              selectedNames.delete(event.target.name)
+              if (event.target.name === selectedPieceName.value) {
+                selectedPieceName.value = null;
+              }
             },
           }
         }
@@ -40,6 +43,7 @@ const useStatsChart = (selector: string) => {
   return {
     draw,
     selectedNames,
+    selectedPieceName,
   };
 };
 
