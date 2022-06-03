@@ -1,6 +1,7 @@
 import { useGetStatsList } from '@/composables/stats-api';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import { computed, ref, watch } from 'vue';
+import { buildStatPieces, StatPiece } from '@/helpers/StatPiece.class';
 
 type SortingDir = 'asc' | 'desc';
 
@@ -15,6 +16,7 @@ export const statItems = result;
 export const isLoadingItems = isLoading;
 
 export const isFirstLoad = ref<boolean>(true);
+export const statPieces = ref<StatPiece[]>([]);
 
 const isFirstLoadWatcher = watch(statItems, () => {
   isFirstLoad.value = false;
@@ -30,6 +32,13 @@ export const fetchIfFirstLoad = () => {
 export const getStatById = (id: string): StatItemI | undefined => {
   return statItems.value.find((item) => item.id === id);
 };
+
+export const initStatPiecesByStatId = (id: string) => {
+  const stat = getStatById(id);
+  if (stat) {
+    statPieces.value = buildStatPieces(stat);
+  }
+}
 
 export const statsItemsPaths = computed(() => {
   return Array.from(
@@ -86,9 +95,10 @@ export const sortedStatItems = computed(() => {
 });
 
 
-export const selectedPiece = ref<any>(null);
-export const setSelectedPiece = (name: string) => {
-  selectedPiece.value = {
-    name,
-  };
+export const selectedPiece = ref<StatPiece | null>(null);
+export const setSelectedPieceByTitle = (title: string | null) => {
+  selectedPiece.value = !title
+    ? null
+    : statPieces.value.find((item) => item.title === title) || null;
 };
+export const isPieceSelectedByIdx = (idx: number) => selectedPiece.value?.idx === idx;

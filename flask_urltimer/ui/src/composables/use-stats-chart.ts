@@ -6,7 +6,7 @@ import { buildStatPieces } from '@/helpers/StatPiece.class';
 
 const useStatsChart = (selector: string) => {
   const selectedNames = reactive<Set<string>>(new Set<string>());
-  const selectedPieceName = ref<null | string>();
+  const selectedPieceName = ref<null | string>(null);
   const draw = (stats: StatItemI) => {
     const pieces = buildStatPieces(stats);
 
@@ -32,7 +32,7 @@ const useStatsChart = (selector: string) => {
         point:{
           events:{
             select: function (event: any) {
-              selectedPieceName.value = event.target.name;
+              selectedPieceName.value = event.target.name || null;
             },
             unselect: function (event: any) {
               if (event.target.name === selectedPieceName.value) {

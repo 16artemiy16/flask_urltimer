@@ -1,4 +1,5 @@
 import { StatItemI } from '@/interfaces/stat-item.interface';
+import { colors } from '@/constants';
 
 type Mark = {
   name: string;
@@ -8,10 +9,14 @@ type Mark = {
 
 export class StatPiece {
   constructor(
-    private idx: number,
+    private _idx: number,
     private start: Mark,
     private end: Mark
   ) {}
+
+  get idx(): number {
+    return this._idx;
+  }
 
   get order(): number {
     return this.idx + 1;
@@ -23,6 +28,21 @@ export class StatPiece {
 
   get duration(): number {
     return this.end.timing - this.start.timing;
+  }
+
+  hasLineByIdx(lineIdx: number): boolean {
+    return this.start.line <= lineIdx && this.end.line > lineIdx;
+  }
+
+  getLineStyle({
+    isSmthSelected,
+    isSelected
+  }: { isSmthSelected: boolean, isSelected: boolean }
+  ): Record<string, string | number> {
+    return {
+      opacity: (!isSelected && isSmthSelected) ? 0.5 : 1,
+      background: colors[this.idx],
+    };
   }
 }
 

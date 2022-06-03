@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue';
-import { getStatById, fetchIfFirstLoad, setSelectedPiece, selectedPiece } from '@/store/stats.store';
+import {
+  getStatById,
+  fetchIfFirstLoad,
+  selectedPiece,
+  initStatPiecesByStatId,
+  setSelectedPieceByTitle, statPieces, isPieceSelectedByIdx
+} from '@/store/stats.store';
 import useStatsChart from '@/composables/use-stats-chart';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import { useRoute } from 'vue-router';
-import { getColorByIdx, getPieceBySeriesName, getPieceOrderByLine } from '@/helpers/coloriser';
 
 fetchIfFirstLoad();
 const { params } = useRoute();
@@ -15,19 +20,22 @@ const stats = computed<StatItemI | undefined>(() => getStatById(params.id as str
 onMounted(() => {
   watch(stats, (value) => {
     if (value) {
+      initStatPiecesByStatId(value.id);
       draw(value as StatItemI);
     }
   }, { immediate: true });
-  watch(selectedPieceName, (name) => setSelectedPiece(name));
+  watch(selectedPieceName, (name) => setSelectedPieceByTitle(name));
 });
 
-const getStyleByIdx = (idx: number): Record<string, any> => {
-  const order = getPieceOrderByLine(stats.value as StatItemI, idx);
-  const opacity = selectedPieceName.value && getPieceBySeriesName(selectedPieceName.value as string) !== order ? 0.5 : 1;
-  return {
-    opacity,
-    background: getColorByIdx(stats.value as StatItemI, idx),
-  };
+const getStyleByIdx = (idx: number): Record<string, string | number> => {
+  const piece = statPieces.value.find((item) => item.hasLineByIdx(idx));
+  if (!piece) {
+    return {};
+  }
+  return piece.getLineStyle({
+    isSmthSelected: !!selectedPiece.value,
+    isSelected: isPieceSelectedByIdx(piece.idx)
+  });
 };
 
 </script>
@@ -39,7 +47,7 @@ const getStyleByIdx = (idx: number): Record<string, any> => {
       <div id="container"></div>
     </div>
     <div v-if="selectedPiece">
-      <h3>{{ selectedPiece.name }}</h3>
+      <h3>{{ selectedPiece.title }}</h3>
     </div>
   </div>
 
