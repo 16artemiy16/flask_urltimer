@@ -1,14 +1,19 @@
 import * as Highcharts from 'highcharts';
 import { StatItemI } from '@/interfaces/stat-item.interface';
-import statsToChartData from '@/helpers/stats-to-chart-data';
 import { colors } from '@/constants';
 import { reactive, ref } from 'vue';
+import { buildStatPieces } from '@/helpers/StatPiece.class';
 
 const useStatsChart = (selector: string) => {
   const selectedNames = reactive<Set<string>>(new Set<string>());
   const selectedPieceName = ref<null | string>();
   const draw = (stats: StatItemI) => {
-    const data = statsToChartData(stats);
+    const pieces = buildStatPieces(stats);
+
+    const data = pieces.map(({ title, duration }) => ({
+      name: title,
+      y: duration,
+    }));
 
     Highcharts.chart(selector, {
       colors,
