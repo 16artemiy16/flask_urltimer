@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import StatListFilter from '@/components/stat-list/stat-list-filter.vue';
+
 import {
   isLoadingItems,
   sortedStatItems,
   toggleSorting,
   getFieldSorting,
-  statsItemsPaths,
   fetchIfFirstLoad,
 } from '@/store/stats.store';
 
@@ -13,10 +14,8 @@ fetchIfFirstLoad();
 </script>
 
 <template>
-  <ul>
-    <li v-for="url in statsItemsPaths" :key="url">{{ url }}</li>
-  </ul>
   <div>
+    <StatListFilter class="py-4" />
     <h2>Sorting</h2>
     <div>
       Duration: {{ getFieldSorting('duration') || 'No' }}

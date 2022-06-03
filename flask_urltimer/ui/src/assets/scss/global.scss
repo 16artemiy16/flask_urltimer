@@ -1,0 +1,15 @@
+@import './_colors.scss';
+@import './_spacing.scss';
+
+body {
+  margin: 0;
+}
+
+a {
+  color: $grey;
+  text-decoration: none;
+
+  &:hover {
+    opacity: .7;
+  }
+}
