@@ -48,6 +48,10 @@ const getStyleByIdx = (idx: number): Record<string, string | number> => {
     </div>
     <div v-if="selectedPiece">
       <h3>{{ selectedPiece.title }}</h3>
+      <p>
+        <b>Duration</b>:
+        {{ selectedPiece.duration }}ms ({{ selectedPiece.calcPercentage(stats.duration) }} %)
+      </p>
     </div>
   </div>
 

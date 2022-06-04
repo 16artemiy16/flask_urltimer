@@ -23,11 +23,17 @@ export class StatPiece {
   }
 
   get title(): string {
-    return `[${this.order}] ${this.start.name}- ${this.end.name}`;
+    return `[${this.order}] ${this.start.name} - ${this.end.name}`;
   }
 
   get duration(): number {
-    return this.end.timing - this.start.timing;
+    const value = this.end.timing - this.start.timing;
+    return +value.toFixed(4);
+  }
+
+  calcPercentage(total: number): number {
+    const value = (this.duration * 100) / total;
+    return +value.toFixed(1);
   }
 
   hasLineByIdx(lineIdx: number): boolean {
