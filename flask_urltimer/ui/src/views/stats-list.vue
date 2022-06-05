@@ -4,9 +4,9 @@ import StatListFilter from '@/components/stat-list/stat-list-filter.vue';
 import {
   isLoadingItems,
   sortedStatItems,
-  toggleSorting,
   getFieldSorting,
   fetchIfFirstLoad,
+  setSorting,
 } from '@/store/stats.store';
 
 fetchIfFirstLoad();
@@ -16,23 +16,27 @@ fetchIfFirstLoad();
 <template>
   <div>
     <StatListFilter class="py-4" />
-    <h2>Sorting</h2>
-    <div>
-      Duration: {{ getFieldSorting('duration') || 'No' }}
-      <button @click="toggleSorting('duration')">Toggle</button>
-    </div>
-    <div>
-      Timestamp: {{ getFieldSorting('timestamp') || 'No' }}
-      <button @click="toggleSorting('timestamp')">Toggle</button>
-    </div>
   </div>
+
   <div v-if="isLoadingItems">Loading</div>
 
   <div>
     <div class="row">
-      <div class="c1">path</div>
-      <div class="c2">time, ms</div>
-      <div class="c2">Date and time</div>
+      <div class="c-header c1">path</div>
+      <div class="c-header c2">
+        time, ms
+        <AppSortingBtn
+            :value="getFieldSorting('duration')"
+            @changed="(value) => setSorting('duration', value)"
+        />
+      </div>
+      <div class="c-header c3">
+        Date and time
+        <AppSortingBtn
+            :value="getFieldSorting('timestamp')"
+            @changed="(value) => setSorting('timestamp', value)"
+        />
+      </div>
     </div>
     <div
       class="row"
@@ -60,5 +64,14 @@ fetchIfFirstLoad();
 }
 .c3 {
   width: 250px;
+}
+.c1, .c2, .c3 {
+  border: 1px black solid;
+  padding: .5rem;
+}
+.c-header {
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

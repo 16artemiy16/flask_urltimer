@@ -2,12 +2,12 @@ import { useGetStatsList } from '@/composables/stats-api';
 import { StatItemI } from '@/interfaces/stat-item.interface';
 import { computed, ref, watch } from 'vue';
 import { buildStatPieces, StatPiece } from '@/helpers/StatPiece.class';
+import { Sorting } from '@/types/common.types';
 
-type SortingDir = 'asc' | 'desc';
 
 interface SortingI {
   field: keyof StatItemI,
-  dir: SortingDir,
+  dir: Sorting,
 }
 
 const { request, isLoading, result } = useGetStatsList();
@@ -50,7 +50,7 @@ export const statsItemsPaths = computed(() => {
 
 export const sorting = ref<SortingI | null>(null);
 
-export const getFieldSorting = (field: keyof StatItemI): SortingDir | null => {
+export const getFieldSorting = (field: keyof StatItemI): Sorting => {
   if (!sorting.value) { return null; }
   if ((sorting.value as SortingI).field === field) {
     return (sorting.value as SortingI).dir;
@@ -58,28 +58,9 @@ export const getFieldSorting = (field: keyof StatItemI): SortingDir | null => {
   return null;
 }
 
-export const resetSorting = () => { sorting.value = null };
-export const setSorting = (field: keyof StatItemI, dir: SortingDir): void => {
+export const setSorting = (field: keyof StatItemI, dir: Sorting): void => {
   sorting.value = { field, dir };
 }
-
-export const toggleSorting = (fieldToSet: keyof StatItemI): void => {
-  if (!sorting.value) {
-    return setSorting(fieldToSet, 'asc');
-  }
-  const { field, dir } = sorting.value;
-  if (fieldToSet !== field) {
-    return setSorting(fieldToSet, 'asc');
-  }
-  if (dir === null) {
-    return setSorting(fieldToSet, 'asc');
-  }
-  if (dir === 'asc') {
-    return setSorting(fieldToSet, 'desc');
-  }
-  resetSorting()
-}
-
 
 export const sortedStatItems = computed(() => {
   if (!sorting.value) {
