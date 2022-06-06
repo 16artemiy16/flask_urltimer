@@ -8,3 +8,9 @@ import PageLayoutTopNav from './page-layout-top-nav.vue';
     <router-view/>
   </main>
 </template>
+
+<style scoped lang="scss">
+main {
+  padding: 1rem;
+}
+</style>
